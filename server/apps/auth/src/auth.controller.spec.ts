@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { PrismaService } from '@app/common';
 
 describe('AuthController', () => {
   let authController: AuthController;
@@ -8,15 +9,20 @@ describe('AuthController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [AuthService],
+      providers: [AuthService, PrismaService],
     }).compile();
 
     authController = app.get<AuthController>(AuthController);
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(authController.signUp()).toBe('Hello World!');
+    const signupParams = {
+      name: 'Test User',
+      email: 'test1@example.com',
+      password: 'password123',
+    };
+    it('should return a token', () => {
+      expect(authController.signUp(signupParams)).toBeDefined();
     });
   });
 });

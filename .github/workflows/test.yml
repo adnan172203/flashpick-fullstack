@@ -17,12 +17,12 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install Dependencies and Generate Prisma
+      - name: Install Dependencies
         run: |
           cd server
           npm install
 
-      - name: Install Dependencies and Generate Prisma
+      - name: Generate Prisma
         run: |
           cd server/apps/auth
           npx prisma generate
