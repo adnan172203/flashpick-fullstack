@@ -15,7 +15,7 @@ describe('AuthController', () => {
     authController = app.get<AuthController>(AuthController);
   });
 
-  describe('root', () => {
+  describe('signup', () => {
     const signupParams = {
       name: 'Test User',
       email: 'test1@example.com',
@@ -23,6 +23,15 @@ describe('AuthController', () => {
     };
     it('should return a token', () => {
       expect(authController.signUp(signupParams)).toBeDefined();
+    });
+  });
+  describe('signin', () => {
+    const signinParams = {
+      email: 'test1@example.com',
+      password: 'password123',
+    };
+    it('should return a token', () => {
+      expect(authController.signIn(signinParams)).toBeDefined();
     });
   });
 });
