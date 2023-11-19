@@ -22,9 +22,9 @@ jobs:
           cd server
           npm install
 
-      - name: Generate Prisma
+      - name: Generate Prisma client
         run: |
-          cd server/apps/auth
+          cd server/apps/user
           npx prisma generate
 
       - name: Run tests
