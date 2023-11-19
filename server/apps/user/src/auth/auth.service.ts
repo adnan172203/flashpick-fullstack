@@ -59,6 +59,8 @@ export class AuthService {
     if (!isValidPassword) {
       throw new HttpException('Invalid credentials', 400);
     }
+
+    return this.generateJWT(user.name, user.id);
   }
 
   private generateJWT(name: string, id: string) {

@@ -124,5 +124,20 @@ describe('AuthService', () => {
         new HttpException('Invalid credentials', 400)
       );
     });
+
+    it('should login user and return the token', async () => {
+      const signinParams = {
+        email: 'test1@example.com',
+        password: 'password123',
+      };
+      // Mock the PrismaService user.findUnique to return null, indicating the email is in use.
+      prismaService.user.findUnique = jest
+        .fn()
+        .mockResolvedValue(signinParams.email);
+
+      const result = await authService.signIn(signinParams);
+
+      expect(result).toBeDefined();
+    });
   });
 });
