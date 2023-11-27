@@ -24,12 +24,12 @@ jobs:
 
       - name: Install user Dependencies
         run: |
-          cd server/apps/user
+          cd server/apps/user-service
           npm install
 
       - name: Generate Prisma client
         run: |
-          cd server/apps/user
+          cd server/apps/user-service
           npx prisma generate
 
       - name: Run tests
