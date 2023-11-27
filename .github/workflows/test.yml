@@ -17,9 +17,14 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install Dependencies
+      - name: Install common Dependencies
         run: |
           cd server
+          npm install
+
+      - name: Install user Dependencies
+        run: |
+          cd server/apps/user
           npm install
 
       - name: Generate Prisma client
