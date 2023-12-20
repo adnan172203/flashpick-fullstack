@@ -6,7 +6,6 @@ export class ProductDto {
 
   description: string;
 
-  //   @Transform((value) => parseFloat(value))
   @IsInt()
   price: number;
 

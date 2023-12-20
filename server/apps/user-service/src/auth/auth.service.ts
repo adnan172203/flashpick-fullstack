@@ -23,7 +23,6 @@ export class AuthService {
         email,
       },
     });
-
     if (userExists) {
       return 'Username or email already exists';
     }
@@ -47,7 +46,6 @@ export class AuthService {
         email,
       },
     });
-
     if (!user) {
       throw new HttpException('Invalid credentials', 400);
     }

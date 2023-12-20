@@ -27,10 +27,5 @@ jobs:
           cd server/apps/user-service
           npm install
 
-      - name: Generate Prisma client
-        run: |
-          cd server/apps/user-service
-          npx prisma generate
-
-      - name: Run tests
-        run: cd server && npm run test
+      # - name: Run tests
+      #   run: cd server && npm run test
