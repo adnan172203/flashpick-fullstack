@@ -14,6 +14,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         password: 'admin',
         autoLoadEntities: true,
         synchronize: true,
+        entities: ['../entities/*.entity'],
       }),
       inject: [ConfigService],
     }),

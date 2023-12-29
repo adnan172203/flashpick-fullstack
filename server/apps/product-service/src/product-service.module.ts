@@ -11,10 +11,10 @@ import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    DatabaseModule,
+    // ConfigModule.forRoot({
+    //   isGlobal: true,
+    // }),
+    // DatabaseModule,
     // TypeOrmModule.forRoot({
     //   type: 'postgres',
     //   host: configService.get('POSTGRES_HOST'),
@@ -41,6 +41,17 @@ import { DatabaseModule } from './database/database.module';
     //   entities: [__dirname + '/**/*.entity{.ts,.js}'],
     // }),
     // inject: [ConfigService],
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'admin',
+      database: 'flashpick-product-service',
+      autoLoadEntities: true,
+      synchronize: true,
+      entities: ['entities/*.entity'],
+    }),
     TypeOrmModule.forFeature([Product]),
   ],
   controllers: [ProductServiceController],
