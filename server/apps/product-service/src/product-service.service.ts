@@ -39,15 +39,14 @@ export class ProductService {
 
   async createProduct({ ...product }: ProductParams) {
     const newProduct = this.productRepository.create(product);
-    const savedProduct = await this.productRepository.save(newProduct);
-    return savedProduct;
+    return await this.productRepository.save(newProduct);
   }
 
   async updateProduct(id: string, { ...product }: UpdateProductParams) {
     const existingProduct = await this.productRepository.findOneBy({ id });
 
     if (!existingProduct) {
-      throw new NotFoundException();
+      throw new NotFoundException('product not found');
     }
 
     const updatedProduct = await this.productRepository.save({
@@ -56,5 +55,15 @@ export class ProductService {
     });
 
     return updatedProduct;
+  }
+
+  async deleteProduct(id: string) {
+    const product = await this.productRepository.findOneBy({ id });
+
+    if (!product) {
+      throw new NotFoundException('product not found');
+    }
+
+    return this.productRepository.remove(product);
   }
 }

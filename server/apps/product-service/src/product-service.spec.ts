@@ -13,6 +13,7 @@ const mockRepository = {
   create: jest.fn(),
   save: jest.fn(),
   findOneBy: jest.fn(),
+  remove: jest.fn(),
 };
 
 const mockProduct = {
@@ -58,7 +59,7 @@ describe('Product Service', () => {
     expect(service).toBeDefined();
   });
 
-  describe('create', () => {
+  describe('create Product', () => {
     describe('when pass product params', () => {
       it('should create a new product', async () => {
         mockRepository.save.mockReturnValue(mockProduct);
@@ -69,7 +70,7 @@ describe('Product Service', () => {
       });
     });
   });
-  describe('update', () => {
+  describe('update Product', () => {
     describe('when update the product id with params', () => {
       it('should update the product', async () => {
         const newProudct = new Product();
@@ -94,6 +95,27 @@ describe('Product Service', () => {
         await expect(service.updateProduct('456', {})).rejects.toThrow(
           NotFoundException
         );
+      });
+    });
+  });
+
+  describe('delete Product', () => {
+    it('should be defined', async () => {
+      expect(service.deleteProduct).toBeDefined();
+    });
+
+    describe('when pass id', () => {
+      it('should delete the product', async () => {
+        const exisProduct = new Product();
+        exisProduct.id = '1';
+        exisProduct.name = 'Mock Product';
+        exisProduct.description = 'Mock Description';
+        exisProduct.price = 20;
+        mockRepository.findOneBy.mockReturnValue(exisProduct);
+
+        await service.deleteProduct('1');
+
+        expect(mockRepository.remove).toHaveBeenCalledWith(exisProduct);
       });
     });
   });
