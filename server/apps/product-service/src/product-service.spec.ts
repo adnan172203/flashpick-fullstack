@@ -13,6 +13,7 @@ const mockRepository = {
   create: jest.fn(),
   save: jest.fn(),
   findOneBy: jest.fn(),
+  find: jest.fn(),
   remove: jest.fn(),
 };
 
@@ -111,11 +112,48 @@ describe('Product Service', () => {
         exisProduct.name = 'Mock Product';
         exisProduct.description = 'Mock Description';
         exisProduct.price = 20;
+
         mockRepository.findOneBy.mockReturnValue(exisProduct);
 
         await service.deleteProduct('1');
 
         expect(mockRepository.remove).toHaveBeenCalledWith(exisProduct);
+      });
+    });
+    describe('otherwise', () => {
+      it('should throw NotFoundException for non-existing product', async () => {
+        mockRepository.findOneBy.mockReturnValue(null);
+
+        await expect(service.deleteProduct('456')).rejects.toThrow(
+          NotFoundException
+        );
+      });
+    });
+  });
+
+  describe('get all products', () => {
+    it('should be defined', () => {
+      expect(service.getAllProducts).toBeDefined();
+    });
+
+    describe('when request', () => {
+      const products = [
+        { id: '1', name: 'Product 1' },
+        { id: '2', name: 'Product 2' },
+      ];
+      it('should fetch all products', async () => {
+        mockRepository.find.mockReturnValue(products);
+
+        const result = await service.getAllProducts();
+
+        expect(result).toEqual(products);
+      });
+      it('should return an empty array if no products are found', async () => {
+        mockRepository.find.mockReturnValue([]);
+
+        const result = await service.getAllProducts();
+
+        expect(result).toEqual([]);
       });
     });
   });

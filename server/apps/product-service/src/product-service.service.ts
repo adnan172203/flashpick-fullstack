@@ -42,6 +42,10 @@ export class ProductService {
     return await this.productRepository.save(newProduct);
   }
 
+  async getAllProducts() {
+    return this.productRepository.find();
+  }
+
   async updateProduct(id: string, { ...product }: UpdateProductParams) {
     const existingProduct = await this.productRepository.findOneBy({ id });
 

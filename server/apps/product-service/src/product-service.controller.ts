@@ -19,6 +19,11 @@ export class ProductServiceController {
     return this.productService.createProduct(body);
   }
 
+  @Get('')
+  getAllProducts() {
+    return this.productService.getAllProducts();
+  }
+
   @Put('/:id')
   update(@Param('id') id: string, @Body() body: UpdateProductDto) {
     return this.productService.updateProduct(id, body);
