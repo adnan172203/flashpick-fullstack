@@ -3,6 +3,7 @@ import { ProductService } from './product-service.service';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
+import { ProductImageGallery } from './entities/product-image-gallery.entity';
 import { NotFoundException } from '@nestjs/common';
 
 // type MockRepositoryType<T = any> = Partial<
@@ -15,7 +16,25 @@ const mockRepository = {
   findOneBy: jest.fn(),
   find: jest.fn(),
   remove: jest.fn(),
+  findOne: jest.fn(),
 };
+
+// const mockProduct = {
+//   id: '1',
+//   name: 'product one',
+//   description: 'product one description',
+//   price: 2,
+//   quantity: 2,
+//   sku: '12',
+//   color: 'red',
+//   size: 'sdf',
+//   stock: 12,
+//   status: true,
+//   fullDescription: 'sdf',
+//   additionalText: 'sdf',
+//   images: [{ imageUrl: 'three.jpg' }, { imageUrl: 'three-another.jpg' }],
+//   productId: "123"
+// };
 
 const mockProduct = {
   id: '1',
@@ -30,6 +49,10 @@ const mockProduct = {
   status: true,
   fullDescription: 'sdf',
   additionalText: 'sdf',
+  images: [
+    { productId: '123', imageUrl: 'three.jpg' },
+    { productId: '123', imageUrl: 'three-another.jpg' },
+  ],
 };
 
 describe('Product Service', () => {
@@ -48,6 +71,10 @@ describe('Product Service', () => {
         {
           provide: getRepositoryToken(Product),
           useValue: mockRepository,
+        },
+        {
+          provide: getRepositoryToken(ProductImageGallery), // Provide ProductImageGallery repository
+          useValue: mockRepository, // You can use the same mockRepository or create another mock for ProductImageGallery
         },
       ],
     }).compile();
@@ -154,6 +181,28 @@ describe('Product Service', () => {
         const result = await service.getAllProducts();
 
         expect(result).toEqual([]);
+      });
+    });
+  });
+
+  describe('get product', () => {
+    it('should be defined', () => {
+      expect(service.getProduct).toBeDefined();
+    });
+
+    describe('when request with id', () => {
+      it('should fetch the product', async () => {
+        const exisProduct = new Product();
+        exisProduct.id = '1';
+        exisProduct.name = 'Mock Product';
+        exisProduct.description = 'Mock Description';
+        exisProduct.price = 20;
+
+        mockRepository.findOne.mockReturnValue(exisProduct);
+
+        const result = await service.getProduct('1');
+
+        expect(result).toEqual(exisProduct);
       });
     });
   });

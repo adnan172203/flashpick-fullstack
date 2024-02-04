@@ -15,13 +15,18 @@ export class ProductServiceController {
   constructor(private readonly productService: ProductService) {}
 
   @Post('create')
-  create(@Body() body: ProductDto) {
-    return this.productService.createProduct(body);
+  async create(@Body() product: ProductDto) {
+    return this.productService.createProduct(product);
   }
 
   @Get('')
   getAllProducts() {
     return this.productService.getAllProducts();
+  }
+
+  @Get('/:id')
+  getProduct(@Param('id') id: string) {
+    return this.productService.getProduct(id);
   }
 
   @Put('/:id')

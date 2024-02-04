@@ -2,9 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ProductImageGallery } from './product-image-gallery.entity';
 
 @Entity()
 export class Product {
@@ -43,6 +45,9 @@ export class Product {
 
   @Column()
   additionalText: string;
+
+  @OneToMany(() => ProductImageGallery, (image) => image.product)
+  images: ProductImageGallery[];
 
   @CreateDateColumn()
   createdAt: Date;

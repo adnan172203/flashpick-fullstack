@@ -4,6 +4,7 @@ import { ProductServiceController } from './product-service.controller';
 import { ProductService } from './product-service.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
+import { ProductImageGallery } from './entities/product-image-gallery.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
 
@@ -52,7 +53,7 @@ import { DatabaseModule } from './database/database.module';
       synchronize: true,
       entities: ['entities/*.entity'],
     }),
-    TypeOrmModule.forFeature([Product]),
+    TypeOrmModule.forFeature([Product, ProductImageGallery]),
   ],
   controllers: [ProductServiceController],
   providers: [ProductService],

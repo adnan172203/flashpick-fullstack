@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
+import { ProductImageGallery } from './entities/product-image-gallery.entity';
 
 interface ProductParams {
   name: string;
@@ -15,7 +16,14 @@ interface ProductParams {
   status: boolean;
   fullDescription: string;
   additionalText: string;
+  images?: ProductImage[];
 }
+
+interface ProductImage {
+  productId: string;
+  imageUrl: string;
+}
+
 interface UpdateProductParams {
   name?: string;
   description?: string;
@@ -34,16 +42,31 @@ interface UpdateProductParams {
 export class ProductService {
   constructor(
     @InjectRepository(Product)
-    private readonly productRepository: Repository<Product>
+    private readonly productRepository: Repository<Product>,
+    @InjectRepository(ProductImageGallery)
+    private readonly productImageRepository: Repository<ProductImageGallery>
   ) {}
 
   async createProduct({ ...product }: ProductParams) {
+    let { images } = product;
     const newProduct = this.productRepository.create(product);
-    return await this.productRepository.save(newProduct);
+
+    const savedProduct = await this.productRepository.save(newProduct);
+
+    this.createProductWithImage(savedProduct.id, images);
+
+    return savedProduct;
   }
 
   async getAllProducts() {
-    return this.productRepository.find();
+    return this.productRepository.find({ relations: ['images'] });
+  }
+
+  async getProduct(id: string) {
+    return this.productRepository.findOne({
+      where: { id },
+      relations: ['images'],
+    });
   }
 
   async updateProduct(id: string, { ...product }: UpdateProductParams) {
@@ -69,5 +92,19 @@ export class ProductService {
     }
 
     return this.productRepository.remove(product);
+  }
+
+  private async createProductWithImage(
+    productId: string,
+    productImages: ProductImage[]
+  ) {
+    const promiseItems = productImages.map(({ imageUrl }: ProductImage) => {
+      return this.productImageRepository.save({
+        productId,
+        imageUrl,
+      });
+    });
+
+    await Promise.all(promiseItems);
   }
 }
